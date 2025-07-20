@@ -15,7 +15,7 @@ namespace BO4CoinsSpriteFix
         public const string MOD_NAME = "4 Coins Sprite Fix";
         public const string MOD_VERSION = "1.0.0";
 
-        public Sprite new4CoinsSprite;
+        public static Sprite new4CoinsSprite;
 
         public void Awake()
         {
@@ -26,11 +26,14 @@ namespace BO4CoinsSpriteFix
         }
 
         [HarmonyPatch(typeof(SpritesDataBaseSO), nameof(SpritesDataBaseSO.GetCoinSprite))]
-        [HarmonyPostfix]
-        public void Replace4CoinsSprite_Postfix(ref Sprite __result, int amount)
+        [HarmonyPrefix]
+        public static bool Replace4CoinsSprite_Postfix(ref Sprite __result, int amount)
         {
-            if (amount == 4)
-                __result = new4CoinsSprite;
+            if (amount != 4)
+                return true;
+
+            __result = new4CoinsSprite;
+            return false;
         }
     }
 }
